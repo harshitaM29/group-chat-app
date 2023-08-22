@@ -1,14 +1,19 @@
 import React from 'react';
-
+import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 import SignUpPage from './pages/SignUpPage';
-import { Fragment } from 'react';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
-    <Fragment>
-    <SignUpPage />
-    </Fragment>
+   <Switch>
+    <Route path='/' exact>
+      <LoginPage />
+    </Route>
+    <Route path = '/signup'>
+      <SignUpPage />
+    </Route>
+   </Switch>
   );
 }
 
