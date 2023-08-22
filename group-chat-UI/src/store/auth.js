@@ -10,7 +10,6 @@ const authSlice = createSlice({
         login(state, action) {
             state.tokenId = action.payload.idToken
             state.isLoggedIn = true
-            state.isPremium = action.payload.isPremium
         },
         logout(state, action) {
             localStorage.clear();

@@ -32,8 +32,7 @@ const Login = () => {
           if(response) {
             
             dispatch(setTokenId(response.data))
-           // history.replace('/home');
-           alert('User logged in successfully')
+           history.replace('/chats');
           }
         } catch(err) {
           setIsLoading(false);
