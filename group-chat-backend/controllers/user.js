@@ -1,7 +1,7 @@
 const Users = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const sequelize = require('../utils/database');
 
 exports.postUserData = async(req,res,next) => {
     const name = req.body.name;
@@ -20,6 +20,7 @@ exports.postUserData = async(req,res,next) => {
     await t.commit();
     return res.status(201).json(userData);
 } catch(err) {
+    console.log(err);
     await t.rollback();
     return res.status(400).json(err.name)
 }

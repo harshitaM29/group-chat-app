@@ -1,6 +1,7 @@
 import classes from './Signup.module.css';
 import { Form, Button, ButtonGroup, Card } from 'react-bootstrap';
 import { useState, useRef } from 'react';
+import axios from 'axios';
 const Signup = () => {
     const [isLoading, setIsLoading] = useState(false);
     const emailInputRef = useRef();
@@ -31,7 +32,7 @@ const Signup = () => {
           setIsLoading(false);
           emailInputRef.current.value = "";
           if(err.response.data === 'SequelizeUniqueConstraintError') {
-            alert('Email id already present');
+            alert('User already present');
 
           }
 
