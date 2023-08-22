@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import {useHistory} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { setTokenId } from '../../store/auth-actions';
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -25,20 +26,20 @@ const Login = () => {
           password:enteredPassword
         }
        setIsLoading(true);
-        // try {
-        // const response = await axios.post('http://localhost:4000/user/login',loginData);
-        // setIsLoading(false);
-        //   if(response) {
+        try {
+        const response = await axios.post('http://localhost:4000/user/login',loginData);
+        setIsLoading(false);
+          if(response) {
             
-        //     dispatch(setTokenId(response.data))
-        //     history.replace('/home');
-        //     //window.location.reload();
-        //   }
-        // } catch(err) {
-        //   setIsLoading(false);
-        //     alert(err.response.data);
+            dispatch(setTokenId(response.data))
+           // history.replace('/home');
+           alert('User logged in successfully')
+          }
+        } catch(err) {
+          setIsLoading(false);
+            alert(err.response.data);
 
-        //   }
+          }
 }
 
     return (
