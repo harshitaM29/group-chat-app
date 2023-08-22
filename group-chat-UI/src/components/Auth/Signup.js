@@ -23,19 +23,19 @@ const Signup = () => {
           password:enteredPassword,
         }
         setIsLoading(true);
-        // try {
-        // const response = await axios.post('http://localhost:4000/user/signup',signupData);
-        //   setIsLoading(false);
+        try {
+        const response = await axios.post('http://localhost:4000/user/signup',signupData);
+          setIsLoading(false);
         //   history.push('/');
-        // } catch(err) {
-        //   setIsLoading(false);
-        //   emailInputRef.current.value = "";
-        //   if(err.response.data === 'SequelizeUniqueConstraintError') {
-        //     alert('Email id already present');
+        } catch(err) {
+          setIsLoading(false);
+          emailInputRef.current.value = "";
+          if(err.response.data === 'SequelizeUniqueConstraintError') {
+            alert('Email id already present');
 
-        //   }
+          }
 
-        // }
+        }
         
     }
 return (
@@ -52,7 +52,7 @@ return (
 </Form.Group>
 <Form.Group className={classes.control} controlId="formBasicPhone">
 <Form.Label>Phone Number</Form.Label>
-<input ref={phoneInputRef} type="number" placeholder="Enter Phone Number" required/>
+<input ref={phoneInputRef} type="number" placeholder="Enter Phone Number" maxLength={10} required/>
 </Form.Group>
 <Form.Group className={classes.control} controlId="formBasicPassword">
 <Form.Label>Password</Form.Label>
