@@ -17,8 +17,16 @@ exports.postMessages = async(req,res,next) => {
 }
 
 exports.getMessages = async(req,res,next) => {
+    const lastMessageId = req.query.lastMessageId;
+    let messages;
     try {
-    const messages = await Chats.findAll();
+    if(lastMessageId === undefined) {
+        messages = await Chats.findAll();
+    }
+    else {
+     messages = await Chats.findAll({ where: { id: id > lastMessageId}});
+     console.log(messages);
+    }
     res.status(200).json(messages);
     }catch(err) {
         res.status(401).json(err);

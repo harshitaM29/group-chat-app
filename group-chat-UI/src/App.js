@@ -8,17 +8,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchMessages } from './store/chat-actions';
 
 function App() {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const dispatch = useDispatch();
     useEffect(() => {
+      const items = {...localStorage}
+      const keys = Object.keys(items);
+      const lastMessageId = (Math.max.apply(null,keys))
       if(isLoggedIn) {
-        setInterval(() => {
-          dispatch(fetchMessages(token));
-        },2000)
-     
+      
+        dispatch(fetchMessages(token, lastMessageId));
       }
-    },[dispatch,token]);
+    },[dispatch,token,isLoggedIn]);
 
   return (
    <Switch>

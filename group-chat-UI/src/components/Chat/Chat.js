@@ -7,9 +7,11 @@ const Chat = () => {
   const[message,setMessage] = useState('');
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
     const messages = useSelector(state => state.chats.receivedChats);
-    // const sendMessage = useSelector(state => state.chats.sendChats)
+   messages.map((msg) => (
+    localStorage.setItem(msg.id,msg.message)
+   ))
     const dispatch = useDispatch();
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
 
     const updatedMessage = (e) => {
       setMessage(e.target.value);

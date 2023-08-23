@@ -14,12 +14,13 @@ export const sendMessage = (message,token) => {
     }
 }
 
-export const fetchMessages = (token) => {
+export const fetchMessages = (token, lastMessageId) => {
     return async(dispatch) => {
         try {
-            const response = await axios.get('http://localhost:4000/chat/getChat', {
+            const response = await axios.get(`http://localhost:4000/chat/getChat?lastMessageId=${lastMessageId}`, {
                 headers: {"Authorization" : token }
             });
+           console.log(response.data);
             dispatch(chatActions.fetchChats({
                 chats: response.data || []
             }))
