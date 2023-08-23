@@ -1,9 +1,22 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import classes from './Chat.module.css';
-import { Fragment,  } from 'react';
+import { Fragment, useState,  } from 'react';
 import {  Card, ListGroup,Form, Row,Col, Button  } from 'react-bootstrap';
+import { sendMessage } from '../../store/chat-actions';
 const Chat = () => {
+  const[message,setMessage] = useState('');
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const dispatch = useDispatch();
+    const token = localStorage.getItem('token');
+
+    const updatedMessage = (e) => {
+      setMessage(e.target.value);
+    }
+    const handleSendMessage = (e) => {
+      e.preventDefault();
+      dispatch(sendMessage(message,token));
+
+    }
     return (
         <Fragment>
        
@@ -19,13 +32,13 @@ const Chat = () => {
     </Card>
    <Card className={classes.chats}>
        
-   <Form>
+   <Form onSubmit={handleSendMessage}>
       <Row>
         <Col xs={10}>
-          <Form.Control />
+          <Form.Control type='text' value={message} onChange={updatedMessage}/>
         </Col>
         <Col>
-         <Button className={classes.actions}>Send</Button>
+         <Button className={classes.actions} type="submit">Send</Button>
         </Col>
         </Row>
         </Form>
