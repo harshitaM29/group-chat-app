@@ -13,7 +13,10 @@ function App() {
   const dispatch = useDispatch();
     useEffect(() => {
       if(isLoggedIn) {
-      dispatch(fetchMessages(token));
+        setInterval(() => {
+          dispatch(fetchMessages(token));
+        },2000)
+     
       }
     },[dispatch,token]);
 

@@ -6,6 +6,8 @@ import { sendMessage } from '../../store/chat-actions';
 const Chat = () => {
   const[message,setMessage] = useState('');
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const messages = useSelector(state => state.chats.receivedChats);
+    // const sendMessage = useSelector(state => state.chats.sendChats)
     const dispatch = useDispatch();
     const token = localStorage.getItem('token');
 
@@ -25,7 +27,9 @@ const Chat = () => {
       
        {isLoggedIn && <ListGroup.Item variant="secondary" className='p-2'>You Joined</ListGroup.Item> }
        <ListGroup.Item className='p-2'>Vaibhav Joined</ListGroup.Item>
-       <ListGroup.Item variant="secondary" className='p-2'>You Joined</ListGroup.Item>
+      {messages.map((item) => (
+        <ListGroup.Item variant="secondary" className='p-2'>{item.message}</ListGroup.Item>
+      ))} 
      
     
       
