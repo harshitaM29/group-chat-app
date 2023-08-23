@@ -13,3 +13,18 @@ export const sendMessage = (message,token) => {
         }
     }
 }
+
+export const fetchMessages = (token) => {
+    return async(dispatch) => {
+        try {
+            const response = await axios.get('http://localhost:4000/chat/getChat', {
+                headers: {"Authorization" : token }
+            });
+            dispatch(chatActions.fetchChats({
+                chats: response.data || []
+            }))
+        }catch(error) {
+            throw new Error(error);
+        }
+    }
+}

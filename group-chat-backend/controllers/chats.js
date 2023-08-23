@@ -15,3 +15,13 @@ exports.postMessages = async(req,res,next) => {
         throw new Error(err);
     }
 }
+
+exports.getMessages = async(req,res,next) => {
+    try {
+    const messages = await Chats.findAll();
+    res.status(200).json(messages);
+    }catch(err) {
+        res.status(401).json(err);
+    }
+
+}

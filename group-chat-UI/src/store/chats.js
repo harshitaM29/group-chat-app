@@ -10,6 +10,9 @@ const chatSlice = createSlice({
             state.sendChats.push({
                 ...action.payload
             })
+        },
+        fetchChats(state,action) {
+            state.receivedChats = action.payload.chats
         }
     }
 });

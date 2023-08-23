@@ -15,7 +15,7 @@ const Chat = () => {
     const handleSendMessage = (e) => {
       e.preventDefault();
       dispatch(sendMessage(message,token));
-
+      setMessage('');
     }
     return (
         <Fragment>
