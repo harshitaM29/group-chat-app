@@ -2,11 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const userRoutes = require('./routes/user');
-const chatRoutes = require('./routes/chats');
+const groupRoutes = require('./routes/group');
 const sequelize = require('./utils/database');
 const User = require('./models/user');
-const Chat = require('./models/chats');
-
+const Group = require('./models/group');
+const Messages = require('./models/messages');
+const UserGroup = require('./models/user-group');
 const app = express();
 app.use(cors({
     origin:'http://localhost:3000',
@@ -14,10 +15,16 @@ app.use(cors({
 }));
 app.use(bodyParser.json({ extended: false }));
 app.use('/user',userRoutes);
-app.use('/chat',chatRoutes);
+app.use('/group',groupRoutes);
 
-User.hasMany(Chat);
-Chat.belongsTo(User);
+User.hasMany(Messages);
+Messages.belongsTo(User);
+
+User.belongsToMany(Group, {through: UserGroup});
+Group.belongsToMany(User, {through:UserGroup});
+
+Group.hasMany(Messages);
+Messages.belongsTo(Group);
 
 sequelize.sync().then(res => {
     app.listen(4000);

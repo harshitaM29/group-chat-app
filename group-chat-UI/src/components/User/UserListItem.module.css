@@ -1,0 +1,14 @@
+.card {
+    cursor: pointer;
+    background: #E8E8E8;
+    width: 90%;
+    display: flex;
+   padding: 0.5rem;
+    color: black;
+    margin-top: 2rem;
+}
+.card:hover {
+    background: #38B2AC;
+    color:white;
+
+}

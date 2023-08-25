@@ -2,6 +2,8 @@ const Users = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sequelize = require('../utils/database');
+const { Op } = require('sequelize');
+
 require('dotenv').config();
 
 const generateWebToken = (id, isPremium) => {
@@ -44,7 +46,7 @@ exports.postLoginUserData = async(req,res,next) => {
         const presentPass = await bcrypt.compare(password, user.password)
        
         if(presentPass) {
-            res.status(200).json({ email:email, password:password, token:generateWebToken(user.id, false) });
+            res.status(200).json({ email:email, password:password,name:user.name, token:generateWebToken(user.id, false) });
             await t.commit();
         } else {
             await t.rollback();
@@ -55,4 +57,30 @@ exports.postLoginUserData = async(req,res,next) => {
         res.status(404).json('User Does Not Exists')
     }
 
+}
+
+exports.searchUser = async(req,res,next) => {
+    const name = req.query.name;
+    let user;
+    try {
+    if(name) {
+        user = await Users.findAll({ where: {name: {
+           [Op.like]: '%' + name + '%',
+           
+        },
+        id:{ 
+            [Op.ne]: req.user.id
+        }
+        }});
+        if(user) {
+            return res.status(200).json(user);
+        } else {
+           res.status(200).json('User Not Found');
+        }
+      
+    } 
+    
+}catch(err) {
+    res.status(404).json('User Does Not Exists')
+}
 }

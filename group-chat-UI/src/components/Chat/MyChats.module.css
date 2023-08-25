@@ -1,0 +1,41 @@
+.card {
+    width:22rem;
+    background: white;
+    display: flex;
+    /* flex-direction: column; */
+    /* align-items: center; */
+    margin-top: 1rem;
+    margin-left: 0.5rem;
+}
+
+.container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.container button {
+    color: black;
+    font-weight: 500;
+}
+
+.groups {
+    display: flex;
+    flex-direction: column;
+    padding: 3px;
+    background-color: #f8f8f8;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    padding: 1rem;
+}
+
+.group {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    height: 3rem;
+    padding: 0.5rem;
+    background: #e8e8e8;
+}

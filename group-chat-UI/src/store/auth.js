@@ -13,6 +13,7 @@ const authSlice = createSlice({
         },
         logout(state, action) {
             localStorage.clear();
+            sessionStorage.clear();
         }
     }
 });
