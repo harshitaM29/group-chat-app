@@ -15,7 +15,7 @@ const MyChats = () => {
     }
   },[dispatch,token,isLoggedIn])
   const chats = useSelector(state => state.group.groupName);
- 
+  
   const selectChat = useSelector(state => state.chat.selectedChat);
 
   return (

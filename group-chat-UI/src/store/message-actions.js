@@ -2,13 +2,12 @@ import { messageActions } from "./messages";
 import axios from "axios";
 
 export const fetchMessages = (token,groupId) => {
-    console.log('hi')
+  
     return async(dispatch) => {
         try {
             const response = await axios.get(`http://localhost:4000/message/fetchMessages/${groupId}`, {
                 headers: { "Authorization": token}
             });
-            console.log(response.data)
             dispatch(messageActions.replaceMessages({
                 messages: response.data || []
             }))

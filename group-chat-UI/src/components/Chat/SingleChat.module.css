@@ -16,7 +16,7 @@
 .messages{
     display: flex;
     flex-direction: column;
-    justify-content: end;
+    justify-content: flex-end;
     padding: 0.5rem;
     background: #e8e8e8;
     width: 100%;
@@ -34,6 +34,6 @@
 .msg{
     display: flex;
     flex-direction: column;
-    overflow-y: scroll;
-    scrollbar-width: none;
+    overflow-x: hidden;
+    overflow-y: auto;
 }

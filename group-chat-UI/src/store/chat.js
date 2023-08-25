@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+
 const initialChatState = {selectedChat:""};
 
 const chatSlice = createSlice({
@@ -8,7 +9,9 @@ const chatSlice = createSlice({
     reducers: {
        setSelectedChat(state,action) {
         
-            state.selectedChat = action.payload
+            state.selectedChat = action.payload;
+            localStorage.setItem('selected',JSON.stringify(state.selectedChat))
+
        }
     }
 });

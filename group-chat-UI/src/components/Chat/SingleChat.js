@@ -7,6 +7,7 @@ import { createMessage, fetchMessages } from '../../store/message-actions';
 import ScrollableChat from './ScrollableChat';
 const SingleChat = () => {
     const selectedChat = useSelector(state => state.chat.selectedChat);
+   
     const messages = useSelector(state => state.messages.messages)
     const [message,setMessage] = useState();
     const [loading,setLoading] = useState(false);
