@@ -16,6 +16,9 @@ const Group = sequelize.define('groups', {
     groupAdmin: {
         type: Sequelize.STRING,
         allowNull:false
+    },
+    latestMessage: {
+        type: Sequelize.STRING
     }
     // users:{
        

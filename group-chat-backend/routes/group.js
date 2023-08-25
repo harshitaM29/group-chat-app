@@ -7,6 +7,7 @@ const userAuthentication = require('../middlewares/authenticate');
 
 router.post('/creategroup',userAuthentication.authenticate,groupController.createGroup);
 router.put('/renamegroup', userAuthentication.authenticate,groupController.renameGroup);
-router.post('/adduser',userAuthentication.authenticate,groupController.addNewUser);
 router.get('/getAllGroups',userAuthentication.authenticate,groupController.getAllGroups);
+router.get('/getallgroupusers/:groupId',userAuthentication.authenticate,groupController.getAllUsersGroup);
+
 module.exports = router;

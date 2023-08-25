@@ -1,10 +1,14 @@
 import React from 'react'
-
+import classes from './ChatBox.module.css';
+import { Card } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import SingleChat from './SingleChat';
 const ChatBox = () => {
+  const selectedChat = useSelector(state => state.chat.selectedChat);
   return (
-    <div>
-      ChatBox
-    </div>
+    <Card className={classes.card}>
+     <SingleChat />
+    </Card>
   )
 }
 

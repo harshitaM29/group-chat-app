@@ -46,7 +46,7 @@ exports.postLoginUserData = async(req,res,next) => {
         const presentPass = await bcrypt.compare(password, user.password)
        
         if(presentPass) {
-            res.status(200).json({ email:email, password:password,name:user.name, token:generateWebToken(user.id, false) });
+            res.status(200).json({id:user.id, email:email, password:password,name:user.name, token:generateWebToken(user.id, false) });
             await t.commit();
         } else {
             await t.rollback();
@@ -64,14 +64,23 @@ exports.searchUser = async(req,res,next) => {
     let user;
     try {
     if(name) {
-        user = await Users.findAll({ where: {name: {
+        user = await Users.findAll({
+            attributes:['id','name'],
+             where: { [Op.or]: [ { name: {
            [Op.like]: '%' + name + '%',
-           
-        },
+             }},
+           { phoneNumber: {
+                [Op.like]: '%' + name + '%',
+                  }},
+            {email: {
+                [Op.like]: '%' + name + '%',
+            }
+        }],
         id:{ 
             [Op.ne]: req.user.id
         }
-        }});
+        }}
+    );
         if(user) {
             return res.status(200).json(user);
         } else {

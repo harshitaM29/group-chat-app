@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const token = sessionStorage.getItem('token')
-const initialAuthState = {tokenId: null, isLoggedIn:!!token,isPremium:null};
+const initialAuthState = {tokenId: null, isLoggedIn:!!token};
 
 const authSlice = createSlice({
     name:'authentication',
@@ -11,7 +11,7 @@ const authSlice = createSlice({
             state.tokenId = action.payload.idToken
             state.isLoggedIn = true
         },
-        logout(state, action) {
+        logout() {
             localStorage.clear();
             sessionStorage.clear();
         }

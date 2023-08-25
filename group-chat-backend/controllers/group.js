@@ -1,5 +1,7 @@
 const Group = require('../models/group');
 const UserGroup = require('../models/user-group');
+const User = require('../models/user');
+const { Op } = require('sequelize');
 
 exports.createGroup = async(req,res,next) => {
     const name = req.body.name;
@@ -24,7 +26,7 @@ exports.createGroup = async(req,res,next) => {
           }
          
         const groupUsersInfo = await UserGroup.bulkCreate(users);
-        res.status(201).json([{groupName:name, groupId:group.id}]);
+        res.status(201).json([{id:group.id, name:name,groupAdmin:req.user.id}]);
     } catch (error) {
         res.status(400).json(error);
     }
@@ -40,53 +42,57 @@ exports.getAllGroups = async(req,res) => {
     const groupIds = groups.map(grp => grp.groupId);
 
     const groupName = await Group.findAll({
-        attributes:["id","name"],
+        attributes:["id","name","groupAdmin"],
         where: { id: groupIds}
     })
     res.status(200).json(groupName);
-}
-
-exports.addNewUser= async(req,res) => {
-    const groupId = req.body.id;
-    const userId = req.body.userId;
-
-    try {
-        const addUser = await UserGroup.create({
-            groupId:groupId,
-            userId:userId
-        });
-      
-        res.status(201).json({user:addUser, message:'User added successfully'});
-    }catch(err){
-        res.status(400).json({message: 'Something Went Wrong'})
-    }
 };
 
-exports.removeUser = async(req,res) => {
-    const userId = req.body.userId;
-    const groupId = req.body.id;
-
+exports.getAllUsersGroup = async(req,res) => {
+    const userId = req.user.id;
+    const groupId = req.params.groupId;
+    
     try {
-       await UserGroup.destroy({
-        where: {
-            userId:userId,
-            groupId:groupId
-        }
-
-       })
-       res.status(201).json({ message: "User Deleted Successfully"});
+        const users = await Group.findAll({
+            attributes: [],
+            where: {
+                id:groupId
+            },
+            include: [
+                {
+                 model:User,
+                 attributes:["id","name"],
+                 where: {
+                    id:{ 
+                        [Op.ne]: userId
+                    }
+                 },
+                 through: {
+                    attributes: [],
+                  },
+                }
+    
+            ]
+        });
+     
+        res.status(201).json(users);
     } catch (error) {
-        res.status(401).json({error:error, message: "User Deleted Successfully"});
+        console.log(error);
     }
+   
+
 }
 
-exports.renameGroup = async(req,res) => {
-    const groupId = req.body.groupId;
-    const name = req.body.name;
 
+
+
+exports.renameGroup = async(req,res) => {
+    const groupId = req.body.id;
+    const name = req.body.name;
+    console.log('hi')
     try {
         const updatedGroupName = await Group.update({name:name},{ where: {id:groupId} });
-        res.status(200).json({ message: 'Group Name Changed Succeefully'});
+        res.status(200).json({ name:updatedGroupName,id:groupId, message: 'Group Name Changed Succeefully'});
 
     }catch(err) {
         res.status(400).json({ message: 'Something Went Wrong'});

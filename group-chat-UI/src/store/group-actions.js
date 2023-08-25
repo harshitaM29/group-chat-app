@@ -22,7 +22,8 @@ export const createGroup = (groupname,users,token) => {
             const response = await axios.post(`http://localhost:4000/group/creategroup`,{name:groupname, users:users}, {
             headers: {"Authorization" : token }
         });
-        dispatch(groupActions.addGroup(response.data));
+        console.log(response.data)
+        dispatch(groupActions.addGroup(response.data[0]));
         } catch (error) {
             
         }

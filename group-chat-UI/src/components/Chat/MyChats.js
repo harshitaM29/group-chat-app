@@ -4,6 +4,7 @@ import classes from './MyChats.module.css';
 import GroupChatModal from '../Layout/GroupChatModal';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAllGroups } from '../../store/group-actions';
+import { chatActions } from '../../store/chat';
 const MyChats = () => {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const token = sessionStorage.getItem('token');
@@ -14,7 +15,9 @@ const MyChats = () => {
     }
   },[dispatch,token,isLoggedIn])
   const chats = useSelector(state => state.group.groupName);
- const [selectChat,setSelectedChat] = useState();
+ 
+  const selectChat = useSelector(state => state.chat.selectedChat);
+
   return (
     <Card className={classes.card}>
       <div className={classes.container}>
@@ -26,7 +29,7 @@ const MyChats = () => {
     {chats.length !==0 ? <Container className={classes.groups}>
       <Stack gap={3}>
      {chats.map((chat) => (
-        <Card className={classes.group} key={chat.id} onClick={() => setSelectedChat(chat)} style={{
+        <Card className={classes.group} key={chat.id} onClick={() => dispatch(chatActions.setSelectedChat(chat))} style={{
           background:(selectChat === chat) ? "#38B2AC": "#E8E8E8",
           color:(selectChat === chat) ? "white": "black",
         }}>

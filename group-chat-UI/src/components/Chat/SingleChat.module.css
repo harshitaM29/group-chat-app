@@ -1,0 +1,39 @@
+.startchat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.grpname {
+    font-size: 22px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+   
+}
+
+.messages{
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    padding: 0.5rem;
+    background: #e8e8e8;
+    width: 100%;
+    height: 100%;
+  overflow-x: hidden;
+    text-overflow: ellipsis;
+    border-radius: 5px;
+  
+}
+.form {
+    position: relative;
+    bottom: 0rem;
+}
+
+.msg{
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}

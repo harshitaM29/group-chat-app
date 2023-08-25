@@ -14,7 +14,9 @@ const groupSlice = createSlice({
        addGroup(state,action) {
         state.changed = true;
        
-        state.groupName = action.payload
+        state.groupName.push({
+            ...action.payload
+        })
        }
     }
 });

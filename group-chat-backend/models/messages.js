@@ -12,9 +12,9 @@ const Messages = sequelize.define('messages', {
     message:{
         type:Sequelize.STRING,
     },
-    isRead: {
-        type:Sequelize.BOOLEAN,
-        defaultValue:false
+    sender: {
+        type:Sequelize.STRING,
+      
     }
 });
 
