@@ -1,6 +1,5 @@
 import React from 'react'
-import { Badge, Card, Form} from 'react-bootstrap';
-import classes from './UserListItem.module.css'
+import { Badge } from 'react-bootstrap';
 const UserBadgeItem = ({user, handleFunction}) => {
   return (
     <Badge onClick={handleFunction} style={{cursor:'pointer', marginLeft:'0.5rem'}}>

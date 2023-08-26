@@ -18,7 +18,7 @@ app.use(cors({
 app.use(bodyParser.json({ extended: false }));
 app.use('/user',userRoutes);
 app.use('/group',groupRoutes);
-// app.use('/admin',adminRoutes);
+app.use('/admin',adminRoutes);
 app.use('/message',messageRoutes);
 User.hasMany(Messages);
 Messages.belongsTo(User);

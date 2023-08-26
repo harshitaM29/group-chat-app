@@ -89,10 +89,15 @@ exports.getAllUsersGroup = async(req,res) => {
 exports.renameGroup = async(req,res) => {
     const groupId = req.body.id;
     const name = req.body.name;
-    console.log('hi')
+  
     try {
-        const updatedGroupName = await Group.update({name:name},{ where: {id:groupId} });
-        res.status(200).json({ name:updatedGroupName,id:groupId, message: 'Group Name Changed Succeefully'});
+       const updatedGroupName = await Group.update({
+        name:name
+    },
+    {where: { id: groupId}});
+       const group = await Group.findOne({ where: {id : groupId}})
+    
+        return res.status(200).json({name:group.name,id:group.id,groupAdmin:group.groupAdmin});
 
     }catch(err) {
         res.status(400).json({ message: 'Something Went Wrong'});
