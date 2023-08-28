@@ -1,5 +1,6 @@
 import React from 'react';
-import ScrollableFeed from 'react-scrollable-feed'
+import ScrollableFeed from 'react-scrollable-feed';
+import validator from 'validator';
 
 const ScrollableChat = ({messages}) => {
     const id = localStorage.getItem('id');
@@ -9,9 +10,7 @@ const ScrollableChat = ({messages}) => {
         <div style={{display:'flex', justifyContent:'space-between', flexDirection:'row',lineHeight:'30px'}} key={m.id}>
         
             <span style={{
-                // backgroundColor: `${
-                //     m.userId === id ? "#BEE3F8" : "B9F5D0"
-                // }`,
+              
                 backgroundColor:(m.userId === +id) ? "#BEE3F8" :"#B9F5D0" ,
                 borderRadius:"20px",
                 padding:"5px 15px",
@@ -20,7 +19,7 @@ const ScrollableChat = ({messages}) => {
             
             }}>
                 
-               { m.userId === +id ? "You" : m.sender}: {m.message}
+               { m.userId === +id ? "You" : m.sender}: {validator.isURL(m.message) ? <img src={m.message} width="200"/>: m.message}
             </span>
         </div>
       ))}

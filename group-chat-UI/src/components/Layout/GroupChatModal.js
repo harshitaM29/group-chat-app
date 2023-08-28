@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import UserListItem from '../User/UserListItem';
 import UserBadgeItem from '../User/UserBadgeItem';
 import { createGroup } from '../../store/group-actions';
+import { baseURL } from '../../constants';
 const GroupChatModal = ({ children }) => {
     const [show, setShow] = useState(false);
     const token = sessionStorage.getItem('token');
@@ -21,11 +22,15 @@ const GroupChatModal = ({ children }) => {
        }
        setLoading(true);
        try {
-        const response = await axios.get(`http://localhost:4000/user/search?name=${search}`, {
+        const response = await axios.get(`${baseURL}/user/search?name=${search}`, {
             headers: {"Authorization" : token }
         });
         setLoading(false);
+        if(response.data) {
         setSearchResult(response.data);
+        } else {
+          setSearchResult([]);
+        }
        } catch (error) {
         setLoading(false);
             throw new Error(error);

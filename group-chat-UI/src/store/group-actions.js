@@ -1,11 +1,12 @@
 import axios from "axios";
 import { groupActions } from "./group";
 import { chatActions } from "./chat";
+import { baseURL } from "../constants";
 
 export const fetchAllGroups = (token) => {
     return async(dispatch) => {
         try {
-            const response = await axios.get(`http://localhost:4000/group/getAllGroups`, {
+            const response = await axios.get(`${baseURL}/group/getAllGroups`, {
             headers: {"Authorization" : token }
         });
         dispatch(groupActions.replaceGroupName({
@@ -20,7 +21,7 @@ export const fetchAllGroups = (token) => {
 export const createGroup = (groupname,users,token) => {
     return async(dispatch) => {
         try {
-            const response = await axios.post(`http://localhost:4000/group/creategroup`,{name:groupname, users:users}, {
+            const response = await axios.post(`${baseURL}/group/creategroup`,{name:groupname, users:users}, {
             headers: {"Authorization" : token }
         });
         console.log(response.data)
@@ -34,7 +35,7 @@ export const createGroup = (groupname,users,token) => {
 export const fetchAllGroupUsers = (token,groupId) => {
     return async(dispatch) => {
         try {
-            const response = await axios.get(`http://localhost:4000/group/getallgroupusers/${groupId}`,{
+            const response = await axios.get(`${baseURL}/group/getallgroupusers/${groupId}`,{
                 headers: {"Authorization" : token }
             });
             dispatch(groupActions.replaceGroupUsers({
@@ -49,7 +50,7 @@ export const fetchAllGroupUsers = (token,groupId) => {
 export const addNewUser = (token,groupId,userId) => {
     return async(dispatch) => {
         try {
-            const response = await axios.post(`http://localhost:4000/admin/addnewuser`,{id:groupId, userId:userId},{
+            const response = await axios.post(`${baseURL}/admin/addnewuser`,{id:groupId, userId:userId},{
                 headers: {"Authorization" : token }
             });
            dispatch(groupActions.addUser(response.data))
@@ -63,7 +64,7 @@ export const removeUser = (token,groupId,userId) => {
     return async(dispatch) => {
         try {
             
-            const response = await axios.delete(`http://localhost:4000/admin/removeuser?id=${groupId}&userId=${userId}`,{
+            const response = await axios.delete(`${baseURL}/admin/removeuser?id=${groupId}&userId=${userId}`,{
                 headers: {"Authorization" : token }
             },
            
@@ -80,7 +81,7 @@ export const removeUser = (token,groupId,userId) => {
 export const changeAdmin = (token,groupId,userId) => {
     return async(dispatch) => {
         try {
-            const response = await axios.put('http://localhost:4000/admin/changeadmin',{id:groupId,userId:userId}, {
+            const response = await axios.put(`${baseURL}/admin/changeadmin`,{id:groupId,userId:userId}, {
                 headers: {"Authorization" : token }
             });
             

@@ -1,5 +1,5 @@
-import React, { Fragment, useState } from 'react'
-import { Button, Nav , Container, Form, Navbar    } from 'react-bootstrap';
+import React, { Fragment } from 'react'
+import { Button, Nav , Container, Navbar    } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../store/auth';
 import { useHistory } from 'react-router-dom';
@@ -33,27 +33,7 @@ const SideDrawer = () => {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-    {/* <Offcanvas show={show} onHide={handleClose}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Search Users</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-        <Form className="d-flex">
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-              value={search}
-              onChange={(e) => {setSearch(e.target.value)}}
-            />
-            <Button variant="outline-success" onClick={handleSearch}>Search</Button>
-          </Form>
-         <span>{searchResult?.map((user) => (
-          <UserListItem key={user.id} user={user} handleFunction={() => accessChat(user.id)} />
-         ))}</span>
-        </Offcanvas.Body>
-      </Offcanvas> */}
+   
     </Fragment>
   )
 }

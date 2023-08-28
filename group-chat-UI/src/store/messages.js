@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialMessageState = {messages:[]};
+const initialMessageState = {messages:[],newSingleMessage:{}};
 
 const messageSlice = createSlice({
     name:'message',
@@ -13,6 +13,9 @@ const messageSlice = createSlice({
             state.messages.push({
                 ...action.payload
             })
+        },
+        newSingleMessage(state,action) {
+            state.newSingleMessage = action.payload
         }
     }
 });

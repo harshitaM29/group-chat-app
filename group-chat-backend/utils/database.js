@@ -7,4 +7,13 @@ const sequelize = new Sequelize(process.env.DB_NAME,process.env.DB_USER,process.
     host:process.env.DB_HOST
 });
 
-module.exports = sequelize;
+const connectToDb = async ()=>{
+    try{
+        await sequelize.sync();
+        
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+module.exports = {sequelize, connectToDb};

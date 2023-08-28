@@ -1,7 +1,7 @@
 const Users = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const sequelize = require('../utils/database');
+const {sequelize} = require('../utils/database');
 const { Op } = require('sequelize');
 
 require('dotenv').config();
@@ -26,7 +26,7 @@ exports.postUserData = async(req,res,next) => {
     await t.commit();
     return res.status(201).json(userData);
 } catch(err) {
-    console.log(err);
+  
     await t.rollback();
     return res.status(400).json(err.name)
 }

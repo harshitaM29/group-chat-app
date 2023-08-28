@@ -5,6 +5,7 @@ import {useHistory} from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { setTokenId } from '../../store/auth-actions';
+import { baseURL } from '../../constants';
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +28,7 @@ const Login = () => {
         }
        setIsLoading(true);
         try {
-        const response = await axios.post('http://localhost:4000/user/login',loginData);
+        const response = await axios.post(`${baseURL}/user/login`,loginData);
         setIsLoading(false);
           if(response) {
             

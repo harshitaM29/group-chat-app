@@ -3,6 +3,7 @@ import { Form, Button, ButtonGroup, Card } from 'react-bootstrap';
 import { useState, useRef } from 'react';
 import {useHistory} from 'react-router-dom';
 import axios from 'axios';
+import { baseURL } from '../../constants';
 const Signup = () => {
     const [isLoading, setIsLoading] = useState(false);
     const history = useHistory();
@@ -27,7 +28,7 @@ const Signup = () => {
         }
         setIsLoading(true);
         try {
-        const response = await axios.post('http://localhost:4000/user/signup',signupData);
+        const response = await axios.post(`${baseURL}/user/signup`,signupData);
           setIsLoading(false);
           history.push('/');
         } catch(err) {

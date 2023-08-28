@@ -1,34 +1,129 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState, useRef } from 'react'
 import { Card, Container,Form,Spinner, Row,Col, Button  } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import classes from './SingleChat.module.css';
 import UpdateGroupModal from '../Layout/UpdateGroupModal';
-import { createMessage, fetchMessages } from '../../store/message-actions';
 import ScrollableChat from './ScrollableChat';
+import { io }  from 'socket.io-client';
+import axios from 'axios';
+import { baseURL } from '../../constants';
+
+const ENDPOINT = baseURL;
+var socket;
+
 const SingleChat = () => {
+  
+  const inputRef = useRef(null);
     const selectedChat = useSelector(state => state.chat.selectedChat);
-   
-    const messages = useSelector(state => state.messages.messages)
+    const id = localStorage.getItem('id');
+    const [convertedFile,setConvertedFile] = useState();
+    const [selectedFile, setSelectedFile] = useState();
+	const [isFilePicked, setIsFilePicked] = useState(false);
     const [message,setMessage] = useState();
     const [loading,setLoading] = useState(false);
+    const [socketConnected,setSocketConnected] = useState(false)
     const token = sessionStorage.getItem('token');
-    const dispatch = useDispatch();
-    const fetchAllMessages = () => {
+
+    const [messageList,setMessageList] = useState([]);
+    useEffect(() => {
+      socket = io(ENDPOINT);
+      socket.emit("setup",id);
+      socket.on('connection',() => {
+          setSocketConnected(true)
+      });
+      
+  },[]);
+
+    const fetchAllMessages = async() => {
         if(!selectedChat) {
             return;
         }
-        dispatch(fetchMessages(token,selectedChat.id));
+        try {
+          const response = await axios.get(`${baseURL}/message/fetchMessages/${selectedChat.id}`, {
+              headers: { "Authorization": token}
+          });
+          setMessageList(response.data);
+          socket.emit("join chat", selectedChat.id);
+      } catch (error) {
+          
+      }
+        socket.emit("joinchat",selectedChat.id);
     };
 
-    useEffect(() => {
-        fetchAllMessages();
-    },[selectedChat]);
-
-    const sendMessage = (e) => {
+    const sendMessage = async(e) => {
         e.preventDefault();
-        dispatch(createMessage(token,selectedChat.id,message));
-        setMessage("");
+        try {
+          const response = await axios.post(`${baseURL}/message/sendMessage`,{id:selectedChat.id,message:message}, {
+              headers: { "Authorization": token}
+          });
+          setMessage("");
+          socket.emit("newMessage", response.data);
+          setMessageList([...messageList,response.data]);
+      } catch (error) {
+          
+      };
     }
+
+    useEffect(() => {
+      fetchAllMessages();
+  },[selectedChat]);
+
+    useEffect(() => {
+     
+      socket.on("received_message",(newMessageReceived) => {
+      
+          console.log(newMessageReceived)
+         setMessageList([...messageList,newMessageReceived])
+       
+      })
+    });
+
+    const handleClick = () => {
+
+      setIsFilePicked(false);
+      setSelectedFile();
+      inputRef.current.click();
+
+    };
+    
+    const handleFileChange = async(event) => {
+      
+      const fileObj = event.target.files && event.target.files[0];
+      const file = await convertToBase64(fileObj);
+      setConvertedFile(file)
+      if (!fileObj) {
+        return;
+      }
+      event.target.value = null;
+  
+     setSelectedFile(fileObj.name)
+      setIsFilePicked(true);
+    
+    };
+  
+    const convertToBase64 = (file) => {
+      return new Promise(resolve => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+              resolve(reader.result);
+          }
+      })
+  };
+
+   const handleSendMedia = async() => {
+    try {
+      const response = await axios.post(`${baseURL}/message/sendMediaFiles`,{id:selectedChat.id,file:convertedFile,filename:selectedFile}, {
+          headers: { "Authorization": token}
+      });
+      
+      setMessage("");
+      socket.emit("newMessage", response.data.sentMediaMessage);
+      setMessageList([...messageList,response.data.sentMediaMessage]);
+  } catch (error) {
+      
+  }
+   };
 
     const typingHandler = (e) => {
         setMessage(e.target.value)
@@ -39,6 +134,7 @@ const SingleChat = () => {
         <>
         <div className={classes.grpname}>
            <h5> {selectedChat.name}</h5>
+           <p></p>
              <UpdateGroupModal />
         </div>
         <Card className={classes.messages}>
@@ -50,7 +146,7 @@ const SingleChat = () => {
           : (
             <>
             <div className={classes.msg}>
-                <ScrollableChat messages={messages} />
+                <ScrollableChat messages={messageList} />
             </div>
             </>
           )
@@ -59,13 +155,25 @@ const SingleChat = () => {
         <Row>
           <Col >
             <Form.Control
-              type="text"
+              type="text/file"
               placeholder="Type Message"
-              className="mb-2"
-              required
+              className="mb-1"
               onChange={typingHandler}
               value={message}
             />
+              
+          </Col>
+          <Col xs="auto"> 
+          <div>
+      <input
+        style={{display: 'none'}}
+        ref={inputRef}
+        type="file"
+        onChange={handleFileChange}
+      />
+ {isFilePicked && <Button variant="secondary" onClick={handleSendMedia}><i class="fa fa-arrow-up" variant="secondary" aria-hidden="true"></i></Button> } 
+ <Button onClick={handleClick}><i class="fa fa-paperclip" aria-hidden="true"></i></Button>
+    </div>
           </Col>
           <Col xs="auto">
             <Button type="submit" >Send</Button>
@@ -84,4 +192,4 @@ const SingleChat = () => {
   )
 }
 
-export default SingleChat
+export default SingleChat;

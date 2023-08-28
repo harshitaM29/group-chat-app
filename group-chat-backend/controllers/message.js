@@ -1,8 +1,42 @@
 const Message = require('../models/messages');
 const Group = require('../models/group');
 const User = require('../models/user');
+const AWS = require('aws-sdk');
+require('dotenv').config();
+const fs = require('fs');
+
+function uploadToS3(filename,file) {
+    console.log(filename)
+    // const file = (filename.name);
+    let s3bucket = new AWS.S3({
+        accessKeyId:process.env.IAM_USER_KEY,
+        secretAccessKey:process.env.IAM_USER_SECRET,
+       
+    });
+   
+    
+        var params = {
+            Bucket:process.env.BUCKET_NAME,
+            Key:filename,
+            Body:new Buffer.from(file.replace(/^data:image\/\w+;base64,/, ""), 'base64'),
+            ACL:'public-read'
+        }
+        return new Promise((resolve,reject) => {
+            s3bucket.upload(params, (err, response) => {
+                if(err) {
+                   
+                    reject(err);
+                } else {
+                  
+                    resolve(response.Location);
+                }
+            })
+        })
+       
+   
 
 
+}
 exports.fetchAllMessages = async(req,res) => {
     const groupId = req.params.groupId;
 try {
@@ -48,3 +82,32 @@ exports.sendMessage = async(req,res) => {
   
 };
 
+exports.sendMedia = async(req,res,next) => {
+    try {
+    const groupId = req.body.id;
+    const base64Image = req.body.file;
+    const imageName = req.body.filename;
+    const userId = req.user.id;
+    const sender = await User.findOne({
+           
+        where: { id: userId}
+    });
+    const fileURL = await uploadToS3(imageName,base64Image);
+    console.log(fileURL)
+    const sentMediaMessage = await Message.create({
+        message:fileURL,
+        sender:sender.name,
+        userId:userId,
+        groupId:groupId
+    });
+    await Group.update({
+        latestMessage:fileURL
+    },
+    {where: { id: groupId}});
+    res.status(200).json({ sentMediaMessage, succues:true})
+    
+    }catch(err) {
+        console.log(err)
+        res.status(500).json({ fileURL:'', success:false, err:err})
+    }
+}

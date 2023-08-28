@@ -1,5 +1,5 @@
-import React, { Fragment, useRef, useState } from 'react'
-import { Modal, Form, Button,Badge, Row, Col,Overlay,Tooltip  } from 'react-bootstrap';
+import React, { Fragment, useState } from 'react'
+import { Modal, Form, Button,Badge, Row, Col  } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import UserBadgeItem from '../User/UserBadgeItem';
@@ -8,6 +8,7 @@ import { chatActions } from '../../store/chat';
 import { groupActions } from '../../store/group';
 import { addNewUser, changeAdmin, fetchAllGroupUsers, removeUser } from '../../store/group-actions';
 import UserListItem from '../User/UserListItem';
+import { baseURL } from '../../constants';
 const UpdateGroupModal = () => {
     const dispatch = useDispatch();
     const userId = localStorage.getItem('id');
@@ -30,7 +31,7 @@ const UpdateGroupModal = () => {
   const handleAdminSearch = async(e) => {
     setSearch(e.target.value)
     try {
-      const response = await axios.get(`http://localhost:4000/user/search?name=${search}`, {
+      const response = await axios.get(`${baseURL}/user/search?name=${search}`, {
           headers: {"Authorization" : token }
       });
       
@@ -48,7 +49,7 @@ const UpdateGroupModal = () => {
     }
     setLoading(true);
     try {
-     const response = await axios.get(`http://localhost:4000/user/search?name=${search}`, {
+     const response = await axios.get(`${baseURL}/user/search?name=${search}`, {
          headers: {"Authorization" : token }
      });
      setLoading(false);
@@ -84,7 +85,7 @@ const UpdateGroupModal = () => {
      const handleRename = async() => {
       
             try {
-             const response = await axios.put(`http://localhost:4000/group/renamegroup`, {id:selectedChat.id,name:name},{
+             const response = await axios.put(`${baseURL}/group/renamegroup`, {id:selectedChat.id,name:name},{
                  headers: {"Authorization" : token }
              });
            
@@ -170,7 +171,8 @@ const UpdateGroupModal = () => {
     <Button variant="danger" onClick={(e) => {
       if(isGroupAdmin && !search) {
         alert('Please make someone admin');
-      }
+        return;
+      } 
       handleLeaveGroup(e,+userId)
     }}>
         Leave Group
@@ -184,4 +186,4 @@ const UpdateGroupModal = () => {
   )
 }
 
-export default UpdateGroupModal
+export default React.memo(UpdateGroupModal);

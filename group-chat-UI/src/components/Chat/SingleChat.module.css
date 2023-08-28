@@ -37,3 +37,13 @@
     overflow-x: hidden;
     overflow-y: auto;
 }
+
+input[type="file"]{
+    display: none;
+  }
+label {
+    cursor: pointer;
+}
+#imageName{
+    color:green;
+  }
