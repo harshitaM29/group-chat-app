@@ -18,19 +18,36 @@ const app = express();
 
 
 app.use(cors({
-    origin:'http://localhost:3000',
+
     credentials:true
 }));
 const accessLogs = fs.createWriteStream(path.join(__dirname,'access.log'),
 {flags: 'a'}
 );
 app.use(morgan('combined', {stream: accessLogs}));
-app.use(helmet());
+app.use(helmet({ crossOriginEmbedderPolicy: false, originAgentCluster: true }));
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "img-src": ["'self'", "https: data: blob:"],
+    },
+  })
+);
 app.use(bodyParser.json({ extended: false, limit: '50mb' }));
 app.use('/user',userRoutes);
 app.use('/group',groupRoutes);
 app.use('/admin',adminRoutes);
 app.use('/message',messageRoutes);
+
+app.use(express.static(
+    path.join(__dirname,"../group-chat-UI/build")));
+app.get("*", (req, res) => {
+        res.sendFile(
+          path.join(__dirname, "../group-chat-UI/build/index.html")
+        );
+      });
+
 User.hasMany(Messages);
 Messages.belongsTo(User);
 
@@ -48,9 +65,7 @@ const server = app.listen(4000 , async ()=>{
 
 const io = require('socket.io')(server,{
     pingTimeout:60000,
-    cors: {
-        origin:'http://localhost:3000',
-    }
+    
 });
 
 io.on("connection", (socket) =>{
