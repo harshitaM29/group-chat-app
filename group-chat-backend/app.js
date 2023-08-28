@@ -10,19 +10,22 @@ const User = require('./models/user');
 const Group = require('./models/group');
 const Messages = require('./models/messages');
 const UserGroup = require('./models/user-group');
-
-const http = require('http');
-const socketio = require('socket.io');
-
+const helmet = require('helmet');
+const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 
-// const server = http.createServer(app);
-// const io = socketio(server).sockets;
 
 app.use(cors({
     origin:'http://localhost:3000',
     credentials:true
 }));
+const accessLogs = fs.createWriteStream(path.join(__dirname,'access.log'),
+{flags: 'a'}
+);
+app.use(morgan('combined', {stream: accessLogs}));
+app.use(helmet());
 app.use(bodyParser.json({ extended: false, limit: '50mb' }));
 app.use('/user',userRoutes);
 app.use('/group',groupRoutes);

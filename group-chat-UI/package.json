@@ -20,7 +20,8 @@
     "redux": "^4.2.1",
     "rsuite": "^5.38.0",
     "socket.io-client": "^4.7.2",
-    "use-file-picker": "^1.7.0"
+    "use-file-picker": "^1.7.0",
+    "validator": "^13.11.0"
   },
   "scripts": {
     "start": "react-scripts start",
