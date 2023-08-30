@@ -35,19 +35,43 @@ exports.createGroup = async(req,res,next) => {
 
 exports.getAllGroups = async(req,res) => {
     const userId = req.user.id;
-    const groups = await UserGroup.findAll({
+
+    try {
+        const groups = await User.findAll({
+            attributes:[],
+            where: {
+                id: userId
+            },
+            include: [
+               {
+                model:Group,
+                attributes:["id","name","groupAdmin"],
+                through: {
+                    attributes: [],
+                  },
+               }
+
+            ]
+
+        });
+      
+        res.status(200).json(groups);
+
+    } catch (error) {
+        res.status(400).json(error);
+    }
+    // const groups = await UserGroup.findAll({
        
-        where: {userId: userId},
-    });
-    const groupIds = groups.map(grp => grp.groupId);
+    //     where: {userId: userId},
+    // });
+    // const groupIds = groups.map(grp => grp.groupId);
 
-    const groupName = await Group.findAll({
-        attributes:["id","name","groupAdmin"],
-        where: { id: groupIds}
-    })
-    res.status(200).json(groupName);
-};
-
+    // const groupName = await Group.findAll({
+    //     attributes:["id","name","groupAdmin"],
+    //     where: { id: groupIds}
+    // })
+    // res.status(200).json(groupName);
+}
 exports.getAllUsersGroup = async(req,res) => {
     const userId = req.user.id;
     const groupId = req.params.groupId;
@@ -77,7 +101,7 @@ exports.getAllUsersGroup = async(req,res) => {
      
         res.status(201).json(users);
     } catch (error) {
-        console.log(error);
+        res.status(401).json(error);
     }
    
 

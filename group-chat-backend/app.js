@@ -25,15 +25,8 @@ const accessLogs = fs.createWriteStream(path.join(__dirname,'access.log'),
 {flags: 'a'}
 );
 app.use(morgan('combined', {stream: accessLogs}));
-app.use(helmet({ crossOriginEmbedderPolicy: false, originAgentCluster: true }));
-app.use(
-  helmet.contentSecurityPolicy({
-    useDefaults: true,
-    directives: {
-      "img-src": ["'self'", "https: data: blob:"],
-    },
-  })
-);
+app.use(helmet());
+
 app.use(bodyParser.json({ extended: false, limit: '50mb' }));
 app.use('/user',userRoutes);
 app.use('/group',groupRoutes);
@@ -44,7 +37,7 @@ app.use(express.static(
     path.join(__dirname,"../group-chat-UI/build")));
 app.get("*", (req, res) => {
         res.sendFile(
-          path.join(__dirname, "../group-chat-UI/build/index.html")
+          path.join(__dirname,"../group-chat-UI/build/index.html")
         );
       });
 

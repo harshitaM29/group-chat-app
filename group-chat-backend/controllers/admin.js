@@ -49,7 +49,7 @@ exports.changeAdmin = async(req,res) => {
     const group = await Group.findOne({ where: {id : groupId}})
        return res.status(200).json({id:group.id,name:group.name,groupAdmin:group.groupAdmin});
     } catch (error) {
-        console.log(error);
+       
         res.status(400).json({error:error, message: 'Something Went Wrong'});
     }
 }

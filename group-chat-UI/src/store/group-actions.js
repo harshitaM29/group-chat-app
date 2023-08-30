@@ -9,8 +9,9 @@ export const fetchAllGroups = (token) => {
             const response = await axios.get(`${baseURL}/group/getAllGroups`, {
             headers: {"Authorization" : token }
         });
+        console.log(response.data)
         dispatch(groupActions.replaceGroupName({
-            groups: response.data || []
+            groups: response.data[0].groups || []
         }))
         } catch (error) {
             
