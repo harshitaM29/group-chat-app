@@ -6,8 +6,7 @@ require('dotenv').config();
 const fs = require('fs');
 
 function uploadToS3(filename,file) {
-    console.log(filename)
-    // const file = (filename.name);
+  
     let s3bucket = new AWS.S3({
         accessKeyId:process.env.IAM_USER_KEY,
         secretAccessKey:process.env.IAM_USER_SECRET,
@@ -93,7 +92,6 @@ exports.sendMedia = async(req,res,next) => {
         where: { id: userId}
     });
     const fileURL = await uploadToS3(imageName,base64Image);
-    console.log(fileURL)
     const sentMediaMessage = await Message.create({
         message:fileURL,
         sender:sender.name,
@@ -107,7 +105,7 @@ exports.sendMedia = async(req,res,next) => {
     res.status(200).json({ sentMediaMessage, succues:true})
     
     }catch(err) {
-        console.log(err)
+        
         res.status(500).json({ fileURL:'', success:false, err:err})
     }
 }
